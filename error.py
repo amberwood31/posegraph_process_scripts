@@ -5,26 +5,16 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
+from utils import read_pose_graph
+from scipy.spatial import procrustes
+from scipy.linalg import orthogonal_procrustes
 
+
+"""some configuration variables"""
 
 plot_aligned_arrays = True
-
-
-
-def read_pose_graph(pose_graph_path):
-    """[summary]
-
-    Args:
-        pose_graph_path (str): [description]
-    
-    Returns:
-        pose_graph (pandas dataframe): 
-            frame_id    x    y    z    qx    qy    qz    qw
-
-    """
-    pose_graph = pd.read_csv(pose_graph_path, delim_whitespace=True , header = None, names = ['frame_id', 'x', 'y', 'z', 'qx', 'qy', 'qz', 'qw']) 
-
-    return pose_graph
+plot_configuration = '2d'
+trial_method = 'dsop'
 
 
 
@@ -45,7 +35,7 @@ def associate_pose_graphs(pose_graph1, pose_graph2):
 
     return associated_pose_graph1
 
-def plot_aligned_array_together(position_array1, position_array2, options = '3d'):
+def plot_aligned_array_together(position_array1, position_array2, filename, options = '3d'):
     """[summary]
 
     Args:
@@ -55,18 +45,20 @@ def plot_aligned_array_together(position_array1, position_array2, options = '3d'
     fig, ax = plt.subplots()
     if options is '3d':
         ax = plt.axes(projection='3d')
-        ax.plot3D(position_array1[0], position_array1[1], position_array1[2], 'gray')
-        ax.plot3D(position_array2[0], position_array2[1], position_array2[2], 'red')
+        ax.plot3D(position_array1[:,0], position_array1[:,1], position_array1[:,2], 'gray')
+        ax.plot3D(position_array2[:,0], position_array2[:,1], position_array2[:,2], 'red')
+        plt.savefig(filename)
         plt.show()
     elif options is '2d':
-        plt.plot(position_array1[0], position_array1[1], 'g')
-        plt.plot(position_array2[0], position_array2[1], 'r')
+        plt.plot(position_array1[:,0], position_array1[:,1], 'g')
+        plt.plot(position_array2[:,0], position_array2[:,1], 'r')
         plt.axis('equal')
+        plt.savefig(filename)
         plt.show()
 
 
 def align_sim3(position_array1, position_array2):
-    """align the two position arrays to get their differences in SIM(3) parameterization
+    """align the position_array2 to position_array1, to get their differences in SIM(3) parameterization
         algorithm based on DSO evaluation script in MATLAB
 
     Args:
@@ -81,33 +73,41 @@ def align_sim3(position_array1, position_array2):
     print(position_array1.shape)
     print(position_array2.shape)
 
-    plot_aligned_array_together(position_array1, position_array2, '2d')
+    if plot_aligned_arrays is True:
+
+        plot_aligned_array_together(position_array1, position_array2, trial_method+'_raw', plot_configuration)
 
     centroid1 = position_array1.mean(axis=0).reshape(1,3)
     centroid2 = position_array2.mean(axis=0).reshape(1,3)
 
-    H = (position_array1 - centroid1).transpose().dot(position_array2 - centroid2)
-    U, S, V = np.linalg.svd(H)
-    R = V.dot(U.transpose())
+    # H = (position_array1 - centroid1).transpose().dot(position_array2 - centroid2)
+    # U, S, V = np.linalg.svd(H)
+    # R = V.dot(U.transpose())
 
-    if np.linalg.det(R) < 0.0:
-        V[:,2] = V[:,2] * -1
-        R = V.dot(U.transpose())
+    # if np.linalg.det(R) < 0.0:
+    #     V[:,2] = V[:,2] * -1
+    #     R = V.dot(U.transpose())
 
+    R, sca = orthogonal_procrustes((position_array2 - centroid2), (position_array1 - centroid1))
     aligned_position_array2 = (position_array2 - centroid2).dot(R.transpose())
     aligned_position_array1 = position_array1 - centroid1
 
+    # aligned_position_array1, aligned_position_array2, diff = procrustes(position_array1, position_array2)
+
     if plot_aligned_arrays is True:
-        plot_aligned_array_together(aligned_position_array1, aligned_position_array2, '2d')
+        plot_aligned_array_together(aligned_position_array1, aligned_position_array2, trial_method + '_after_align', plot_configuration)
 
-    scale2 = (aligned_position_array2**2).sum();
-    scale1 = aligned_position_array1.dot(aligned_position_array2.transpose()).diagonal().sum();
+    scale1 = (aligned_position_array1**2).sum();
+    scale2 = aligned_position_array1.dot(aligned_position_array2.transpose()).diagonal().sum();
 
-    scale = scale2/scale1
+    scale = scale1/scale2
 
     translation = (centroid1.transpose() - scale * R.dot(centroid2.transpose())).transpose()
 
     rmse = np.sqrt(((scale * aligned_position_array2 - aligned_position_array1)**2).sum()/position_array1.shape[0])
+
+    if plot_aligned_arrays is True:
+        plot_aligned_array_together(aligned_position_array1, scale * aligned_position_array2,  trial_method + '_after_align_scale', plot_configuration)
 
     if np.isnan(scale):
         return np.nan, np.nan, np.nan, np.nan

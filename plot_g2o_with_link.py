@@ -9,6 +9,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 from mpl_toolkits import mplot3d
+from utils import read_pose_graph
+from utils import compute_odometry
 
 # In[2]:
 plot_node_degree = False
@@ -19,7 +21,7 @@ def plot_trajectory( file_name , options, end_vertex=1508):
 #options = "2d"
 #file_name = "/home/amber/stew/test_backend/manhattan_group10_outlier1000_vertigo/manhattan_seed_7/input.g2o"
 #print(file_name)
-    df = pd.read_csv(file_name, sep = "\s+|\t+|\s+\t+|\t+\s+" , header = None, names = range(12)) #
+    df = read_pose_graph(file_name)
     
     if options == "2d":
         vertex = df.loc[df[0] == "VERTEX_SE2"]
@@ -36,11 +38,13 @@ def plot_trajectory( file_name , options, end_vertex=1508):
     #vertex = vertex.sort_values(by = 1) # sorting vertex indexes to be increasing sequencial
     #vertex = vertex.reset_index(drop=True) # refresh the index
     print(vertex)
-    trajectory_x = np.array(vertex[1]) # 2D_trajectory_x
+    vertex_selected = vertex.loc[vertex['frame_id'] <= end_vertex]
+    trajectory_selected = vertex_selected[['x','y','z']].to_numpy()
+    trajectory_x = trajectory_selected[:,0] # 2D_trajectory_x
     print(trajectory_x)
-    trajectory_y = np.array(vertex[2]) # 2D_trajectory_y
+    trajectory_y = trajectory_selected[:,1] # 2D_trajectory_y
     if options == "3d":
-        trajectory_z = np.array(vertex[3])
+        trajectory_z = trajectory_selected[0,2]
     
     fig, ax = plt.subplots()
     if options == "2d":
@@ -62,8 +66,19 @@ def plot_trajectory( file_name , options, end_vertex=1508):
     #ax.axis('off') #diable border
     #plt.axis((-300,300,-10,500))
     filename = file_name.split(".")
+    print('saving plots to ', filename[0])
     plt.savefig(filename[0])
     plt.show()
+
+    camera_movement = compute_odometry(trajectory_selected)
+    fig, ax = plt.subplots()
+    plt.plot(camera_movement[:,0], 'r')
+    plt.plot(camera_movement[:,1], 'g')
+    plt.plot(camera_movement[:,2], 'b')
+    filename = 'camera_movement'
+    plt.savefig(filename)
+    plt.show()
+
 
 # In[3]:
 
