@@ -10,11 +10,17 @@ from scipy.spatial import procrustes
 from scipy.linalg import orthogonal_procrustes
 
 
+"""example
+python error.py ../gt_icl_living_traj0/groundtruth.txt ../results_dso_500_images/result.txt dso
+python error.py ../gt_icl_living_traj0/groundtruth.txt ../results_dsop_500_images/result.txt dsop
+
+"""
+
 """some configuration variables"""
 
 plot_aligned_arrays = True
 plot_configuration = '2d'
-trial_method = 'dsop'
+trial_method = ''
 
 
 
@@ -119,7 +125,7 @@ def align_sim3(position_array1, position_array2):
 if __name__ == "__main__":
     pose_graph_1 =sys.argv[1]
     pose_graph_2 =sys.argv[2]
-    
+    trial_method = sys.argv[3]
 
     pg1 = read_pose_graph(pose_graph_1)
     pg2 = read_pose_graph(pose_graph_2)
