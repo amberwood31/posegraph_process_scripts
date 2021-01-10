@@ -58,6 +58,8 @@ def plot_aligned_array_together(position_array1, position_array2, filename, opti
     elif options is '2d':
         plt.plot(position_array1[:,0], position_array1[:,1], 'g')
         plt.plot(position_array2[:,0], position_array2[:,1], 'r')
+        plt.plot(position_array1[7:15, 0], position_array1[7:15, 1], 'g*')
+        plt.plot(position_array2[7:15, 0], position_array2[7:15, 1], 'r*')
         plt.axis('equal')
         plt.savefig(filename)
         plt.show()
@@ -137,8 +139,9 @@ if __name__ == "__main__":
     #     print(pg2)
     #     print(associated_pg1)
 
-    scale, translation, rotation, rmse = align_sim3(associated_pg1[['x', 'y', 'z']].to_numpy(), \
-         pg2[['x', 'y', 'z']].to_numpy())
+    gt_nparray = associated_pg1[['x', 'y', 'z']].to_numpy()[7::,:]
+    pg2_nparray = pg2[['x', 'y', 'z']].to_numpy()[7::,:]
+    scale, translation, rotation, rmse = align_sim3(gt_nparray, pg2_nparray)
 
     print('scale: ' , scale)
     print('translation: ', translation)

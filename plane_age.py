@@ -39,6 +39,6 @@ if __name__ == "__main__":
 
     os.chdir(log_folder)
     os.system(extract_age_command)
-    os.chdir('../scripts/')
+    os.chdir('/media/amber/www/devel/dsop_ws/devel/lib/dso_plane_ros/scripts')
 
     read_log_file(log_folder +age_file_name, host_id, plane_id)
