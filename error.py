@@ -139,8 +139,8 @@ if __name__ == "__main__":
     #     print(pg2)
     #     print(associated_pg1)
 
-    gt_nparray = associated_pg1[['x', 'y', 'z']].to_numpy()[7::,:]
-    pg2_nparray = pg2[['x', 'y', 'z']].to_numpy()[7::,:]
+    gt_nparray = associated_pg1[['x', 'y', 'z']].to_numpy()
+    pg2_nparray = pg2[['x', 'y', 'z']].to_numpy()
     scale, translation, rotation, rmse = align_sim3(gt_nparray, pg2_nparray)
 
     print('scale: ' , scale)
