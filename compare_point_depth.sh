@@ -44,7 +44,7 @@ then
 
     ./pcl_point_select "$RESULTS_FOLDER"host"$HOST"_age"$AGE".uvdepth "$RESULTS_FOLDER"host"$HOST"_age"$AGE".uvdepth "$RESULTS_FOLDER"host"$HOST"_age"$AGE".camera compare_host"$HOST"_age"$AGE"_"$TRIAL".pcd uvdepth "$COLOR"
 
-    pcl_viewer gt_host"$HOST"_age"$AGE".pcd -bc 1,1,1 -ps 10 -ax 1 compare_host"$HOST"_age"$AGE".pcd -ps 10 
+    pcl_viewer gt_host"$HOST"_age"$AGE"_"$TRIAL".pcd -bc 1,1,1 -ps 10 -ax 1 compare_host"$HOST"_age"$AGE"_"$TRIAL".pcd -ps 10 
 
 
 elif [ $GT_TYPE == 'image' ]
@@ -60,7 +60,7 @@ then
 
     ./pcl_point_select "$RESULTS_FOLDER"host"$HOST"_age"$AGE".uvdepth "$RESULTS_FOLDER"host"$HOST"_age"$AGE".uvdepth "$RESULTS_FOLDER"host"$HOST"_age"$AGE".camera compare_host"$HOST"_age"$AGE"_"$TRIAL".pcd uvdepth "$COLOR"
 
-    pcl_viewer gt_host"$HOST"_age"$AGE".pcd -bc 1,1,1 -ps 10 -ax 1 compare_host"$HOST"_age"$AGE".pcd -ps 10
+    pcl_viewer gt_host"$HOST"_age"$AGE"_"$TRIAL".pcd -bc 1,1,1 -ps 10 -ax 1 compare_host"$HOST"_age"$AGE"_"$TRIAL".pcd -ps 10
     
 
 fi

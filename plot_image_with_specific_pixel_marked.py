@@ -77,5 +77,8 @@ if __name__ == "__main__":
     elif options.file_type == 'projected':
         save_file = options.pixel_file[-34:-4]+'.png'
     print('saving to '+ save_file)
+
+    cv2.imshow('marked_pixel', img)
+    cv2.waitKey(0)
     cv2.imwrite(save_file, img)
 

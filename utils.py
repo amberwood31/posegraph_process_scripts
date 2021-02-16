@@ -18,6 +18,21 @@ def read_pose_graph(pose_graph_path):
 
     return pose_graph
 
+def read_pose_graph_with_timestamp(pose_graph_path):
+    """[summary]
+
+    Args:
+        pose_graph_path (str): [description]
+    
+    Returns:
+        pose_graph (pandas dataframe): 
+            frame_id    x    y    z    qx    qy    qz    qw
+
+    """
+    pose_graph = pd.read_csv(pose_graph_path, delim_whitespace=True , header = None, names = ['timestamp', 'x', 'y', 'z', 'qx', 'qy', 'qz', 'qw']) 
+
+    return pose_graph
+
 def compute_odometry(position_array):
     """ compute the relative position from absolute position
 

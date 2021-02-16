@@ -18,8 +18,8 @@ python error.py ../gt_icl_living_traj0/groundtruth.txt ../results_dsop_500_image
 
 """some configuration variables"""
 
-plot_aligned_arrays = True
-plot_configuration = '2d'
+plot_aligned_arrays = False
+plot_configuration = '3d'
 trial_method = ''
 
 
@@ -52,14 +52,16 @@ def plot_aligned_array_together(position_array1, position_array2, filename, opti
     if options is '3d':
         ax = plt.axes(projection='3d')
         ax.plot3D(position_array1[:,0], position_array1[:,1], position_array1[:,2], 'gray')
+        ax.plot3D(position_array1[0:20,0], position_array1[0:20,1], position_array1[0:20,2], 'green')
         ax.plot3D(position_array2[:,0], position_array2[:,1], position_array2[:,2], 'red')
+        ax.plot3D(position_array2[0:20,0], position_array2[0:20,1], position_array2[0:20,2], 'green')
         plt.savefig(filename)
         plt.show()
     elif options is '2d':
         plt.plot(position_array1[:,0], position_array1[:,1], 'g')
         plt.plot(position_array2[:,0], position_array2[:,1], 'r')
-        plt.plot(position_array1[7:15, 0], position_array1[7:15, 1], 'g*')
-        plt.plot(position_array2[7:15, 0], position_array2[7:15, 1], 'r*')
+        plt.plot(position_array1[95::, 0], position_array1[95::, 1], 'g*')
+        plt.plot(position_array2[95::, 0], position_array2[95::, 1], 'r*')
         plt.axis('equal')
         plt.savefig(filename)
         plt.show()
@@ -88,31 +90,38 @@ def align_sim3(position_array1, position_array2):
     centroid1 = position_array1.mean(axis=0).reshape(1,3)
     centroid2 = position_array2.mean(axis=0).reshape(1,3)
 
-    # H = (position_array1 - centroid1).transpose().dot(position_array2 - centroid2)
-    # U, S, V = np.linalg.svd(H)
-    # R = V.dot(U.transpose())
+    H = ((position_array2 - centroid2).transpose()).dot(position_array1 - centroid1)
+    U, sdiag, VT = np.linalg.svd(H)
+    S = np.zeros((H.shape[0], H.shape[1]))
+    np.fill_diagonal(S, sdiag)
+    V = VT.transpose()
+    R = V.dot(U.transpose())
+    if np.linalg.det(R) < 0.0:
+        print('determinant negative: ', np.linalg.det(R))
+        # V[:,2] = V[:,2] * -1
+        # R = V.dot(U.transpose())
 
-    # if np.linalg.det(R) < 0.0:
-    #     V[:,2] = V[:,2] * -1
-    #     R = V.dot(U.transpose())
-
-    R, sca = orthogonal_procrustes((position_array2 - centroid2), (position_array1 - centroid1))
+    # R, sca = orthogonal_procrustes((position_array2 - centroid2), (position_array1 - centroid1))
     aligned_position_array2 = (position_array2 - centroid2).dot(R.transpose())
     aligned_position_array1 = position_array1 - centroid1
 
+    # print('array shape: ', aligned_position_array1.shape)
     # aligned_position_array1, aligned_position_array2, diff = procrustes(position_array1, position_array2)
 
     if plot_aligned_arrays is True:
         plot_aligned_array_together(aligned_position_array1, aligned_position_array2, trial_method + '_after_align', plot_configuration)
 
-    scale1 = (aligned_position_array1**2).sum();
-    scale2 = aligned_position_array1.dot(aligned_position_array2.transpose()).diagonal().sum();
+    # scale1 = (aligned_position_array1**2).sum();
+    # scale2 = aligned_position_array1.dot(aligned_position_array2.transpose()).diagonal().sum();
 
-    scale = scale1/scale2
+    scale1 = (aligned_position_array2.dot(aligned_position_array1.transpose())).diagonal().sum()
+    scale2 = (aligned_position_array2**2).sum();
+
+    scale = abs(scale1/scale2)
 
     translation = (centroid1.transpose() - scale * R.dot(centroid2.transpose())).transpose()
 
-    rmse = np.sqrt(((scale * aligned_position_array2 - aligned_position_array1)**2).sum()/position_array1.shape[0])
+    rmse = np.sqrt((((scale * aligned_position_array2 - aligned_position_array1)**2).sum(axis=0)/position_array1.shape[0]).sum())
 
     if plot_aligned_arrays is True:
         plot_aligned_array_together(aligned_position_array1, scale * aligned_position_array2,  trial_method + '_after_align_scale', plot_configuration)
@@ -125,9 +134,14 @@ def align_sim3(position_array1, position_array2):
 
 
 if __name__ == "__main__":
+
+
+
     pose_graph_1 =sys.argv[1]
     pose_graph_2 =sys.argv[2]
-    trial_method = sys.argv[3]
+    reverse = sys.argv[3] # 0 for forward, 1 for backward
+    trial_method = sys.argv[4]
+
 
     pg1 = read_pose_graph(pose_graph_1)
     pg2 = read_pose_graph(pose_graph_2)
@@ -139,14 +153,25 @@ if __name__ == "__main__":
     #     print(pg2)
     #     print(associated_pg1)
 
-    gt_nparray = associated_pg1[['x', 'y', 'z']].to_numpy()
-    pg2_nparray = pg2[['x', 'y', 'z']].to_numpy()
+    pg2 = pg2.loc[pg2['frame_id'].isin(associated_pg1['frame_id']).tolist()]
+
+
+    if int(reverse) == 1:
+        pg2 = pg2[::-1].reset_index()
+    
+    
+    end_index = associated_pg1.shape[0]
+    if len(sys.argv) >5:
+        end_index = int(sys.argv[5])
+
+    gt_nparray = associated_pg1[['x', 'y', 'z']].to_numpy()[0:end_index, :]
+    pg2_nparray = pg2[['x', 'y', 'z']].to_numpy()[0:end_index, :]
     scale, translation, rotation, rmse = align_sim3(gt_nparray, pg2_nparray)
 
     print('scale: ' , scale)
-    print('translation: ', translation)
-    print('rotation: ', rotation)
-    print('rmse: ', rmse)
+    print('translation: ', type(translation), ' ', translation)
+    print('rotation: ', type(rotation), ' ', rotation)
+    print('rmse: ', type(rmse), ' ', rmse)
 
 
     # plot_results()

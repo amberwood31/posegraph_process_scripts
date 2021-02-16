@@ -21,9 +21,10 @@ def read_log_file(log_file_path, host_id, plane_id):
     logs = pd.read_csv(log_file_path, delim_whitespace=True, header = None, \
         names = ['host_token', 'host_id', 'plane_token', 'plane_id', 'age_token', 'age'])
 
+    logs = logs[['host_id', 'plane_id', 'age']]
     logs = logs.sort_values(by=['host_id', 'plane_id'])
 
-    print(logs.loc[(logs['host_id'] == int(host_id)) & (logs['plane_id'] == int(plane_id))])
+    print(logs.loc[(logs['host_id'] == int(host_id)) & (logs['plane_id'] == int(plane_id))]['age'].max())
 
 
 if __name__ == "__main__":
