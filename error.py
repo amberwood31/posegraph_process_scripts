@@ -52,9 +52,9 @@ def plot_aligned_array_together(position_array1, position_array2, filename, opti
     if options is '3d':
         ax = plt.axes(projection='3d')
         ax.plot3D(position_array1[:,0], position_array1[:,1], position_array1[:,2], 'gray')
-        ax.plot3D(position_array1[0:20,0], position_array1[0:20,1], position_array1[0:20,2], 'green')
+        ax.plot3D(position_array1[0:20,0], position_array1[0:20,1], position_array1[0:20,2], 'blue')
         ax.plot3D(position_array2[:,0], position_array2[:,1], position_array2[:,2], 'red')
-        ax.plot3D(position_array2[0:20,0], position_array2[0:20,1], position_array2[0:20,2], 'green')
+        ax.plot3D(position_array2[0:20,0], position_array2[0:20,1], position_array2[0:20,2], 'blue')
         plt.savefig(filename)
         plt.show()
     elif options is '2d':

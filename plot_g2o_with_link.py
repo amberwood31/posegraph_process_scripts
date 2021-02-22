@@ -18,7 +18,7 @@ plot_all_lc = False
 plot_3d_to_2d = False
 plot_option = '3d'
 
-def plot_trajectory( file_name , options, dataset, end_vertex=1508):
+def plot_trajectory( file_name , options, dataset):
 #options = "2d"
 #file_name = "/home/amber/stew/test_backend/manhattan_group10_outlier1000_vertigo/manhattan_seed_7/input.g2o"
 #print(file_name)
@@ -38,6 +38,7 @@ def plot_trajectory( file_name , options, dataset, end_vertex=1508):
         # but the actual poses are in increasing sequencial. Just ignore the vertex_id
     #vertex = vertex.sort_values(by = 1) # sorting vertex indexes to be increasing sequencial
     #vertex = vertex.reset_index(drop=True) # refresh the index
+    end_vertex = vertex.shape[0]
     vertex_selected = vertex.iloc[0:end_vertex]
     trajectory_selected = vertex_selected[['x','y','z']].to_numpy()
     trajectory_x = trajectory_selected[:,0] # 2D_trajectory_x

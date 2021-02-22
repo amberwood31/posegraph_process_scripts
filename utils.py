@@ -3,6 +3,12 @@
 import pandas as pd
 import numpy as np
 
+def read_timestamp_id(timestamp_path):
+
+    timestamp = pd.read_csv(timestamp_path, delim_whitespace=True , header = None, names = ['timestamp', 'image'])
+
+    return timestamp
+    
 def read_pose_graph(pose_graph_path):
     """[summary]
 
@@ -15,6 +21,9 @@ def read_pose_graph(pose_graph_path):
 
     """
     pose_graph = pd.read_csv(pose_graph_path, delim_whitespace=True , header = None, names = ['frame_id', 'x', 'y', 'z', 'qx', 'qy', 'qz', 'qw']) 
+
+    if pose_graph['frame_id'][0] > 1000: # timestamp detected
+        pose_graph['frame_id'] = pose_graph.index
 
     return pose_graph
 

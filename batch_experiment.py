@@ -2,9 +2,9 @@ import os
 
 
 
-trials = 10
+trials = 5
 results_folder_template = 'results_newdsop_living_traj0_trial'
-output_folder_name_templete = 'nplanes15_'
+output_folder_name_templete = 'nplanes5_'
 
 dso_filenames = ['sim_living_traj0', 'sim_living_traj0', 'sim_living_traj1','sim_living_traj1', 'sim_living_traj2','sim_living_traj2', 'sim_living_traj3', 'sim_living_traj3', 'sim_office_traj0', 'sim_office_traj0',  'sim_office_traj1', 'sim_office_traj1', 'sim_office_traj2', 'sim_office_traj2', 'sim_office_traj3', 'sim_office_traj3']
 
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     for i in range(0, len(input_filenames)):
 
         input_template = input_filenames[i]
-        command = 'rosrun dso_plane_ros dso_plane_ros_imagefile files=/media/amber/www/data/ICL_' + input_template +'_frei_png/rgb calib=/media/amber/www/data/ICL_' + input_template + '_frei_png/camera.txt mode=2 plane=1 nogui=1'
+        command = 'rosrun dso_plane_ros dso_plane_ros_imagefile files=/media/amber/www/data/ICL_' + input_template +'_frei_png/rgb calib=/media/amber/www/data/ICL_' + input_template + '_frei_png/camera.txt mode=2 plane=1 nogui=1 nomt=1 planeActive=5'
             
         path = output_folder_name_templete + 'results_newdsop_' + input_template
 
@@ -38,9 +38,9 @@ if __name__ == "__main__":
     # print(run_command)
     # print(output_path)
 
-    for j in range(4, 5):
+    for j in range(0, len(input_filenames)):
 
-        for i in range(3, trials):
+        for i in range(0, trials):
             # run experiment
             os.system(run_command[j])
 

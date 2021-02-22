@@ -25,13 +25,15 @@ accumulative_counts2 = []
 thresholds_range = np.arange(0,0.42,0.01)
 
 # selected_option = [0,2,4,6,8,10,12,14]
-selected_option = range(0,rmse_results1.shape[1])
+selected_option = range(0,16)
+
+#selected_option = range(0,rmse_results1.shape[1])
 for threshold in thresholds_range:
     count1 = rmse_results1.iloc[:,selected_option].le(float(threshold)).sum().sum()
-    accumulative_counts1.append(count1/2)
+    accumulative_counts1.append(count1)
 
     count2 = rmse_results2.iloc[:,selected_option].le(float(threshold)).sum().sum()
-    accumulative_counts2.append(count2/2)
+    accumulative_counts2.append(count2)
 
 fig, ax = plt.subplots()
 plt.plot(thresholds_range, accumulative_counts1,  'b')
