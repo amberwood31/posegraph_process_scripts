@@ -12,7 +12,7 @@ from scipy.linalg import orthogonal_procrustes
 
 
 """example
-python dso_error.py /media/amber/www/data/dso_supp_v2/gtFiles/sim_office_traj0.txt /media/amber/www/data/dso_supp_v2/DS-VO_Forward/sim_office_traj0_6.txt test 100
+ python eth_error.py /media/amber/www/data/sfm_planar_2/groundtruth.txt /media/amber/www/devel/dsop_results/trial_nplane1_dsop_sfm_planar2/result.txt /media/amber/www/data/sfm_planar_2/rgb.txt test
 
 """
 

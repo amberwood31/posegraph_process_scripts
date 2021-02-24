@@ -12,8 +12,8 @@ if len(sys.argv)>3:
     name_template = sys.argv[3]
 plot_filename = name_template + '_accumulative_plot'
 # threshold = sys.argv[2]
-rmse_results1 = pd.read_csv(rmse_file1, sep = ',', header = 0, names = dso_filenames)
-rmse_results2 = pd.read_csv(rmse_file2, sep = ',', header = 0, names = dso_filenames)
+rmse_results1 = pd.read_csv(rmse_file1, sep = ',', header = 0, index_col=0)
+rmse_results2 = pd.read_csv(rmse_file2, sep = ',', header = 0, index_col=0)
 # print(rmse_results)
 
 # print(rmse_results.le(float(threshold)))
@@ -29,10 +29,10 @@ selected_option = range(0,16)
 
 #selected_option = range(0,rmse_results1.shape[1])
 for threshold in thresholds_range:
-    count1 = rmse_results1.iloc[:,selected_option].le(float(threshold)).sum().sum()
+    count1 = rmse_results1.iloc[0:5,selected_option].le(float(threshold)).sum().sum()
     accumulative_counts1.append(count1)
 
-    count2 = rmse_results2.iloc[:,selected_option].le(float(threshold)).sum().sum()
+    count2 = rmse_results2.iloc[0:5,selected_option].le(float(threshold)).sum().sum()
     accumulative_counts2.append(count2)
 
 fig, ax = plt.subplots()
@@ -41,5 +41,7 @@ plt.plot(thresholds_range, accumulative_counts2,  '-r*')
 print('saving plots to ', plot_filename)
 plt.savefig(plot_filename)
 plt.show()
+
+print(rmse_results2.iloc[0:5,selected_option].le(0.4).sum().sum())
 
 

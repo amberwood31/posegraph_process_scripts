@@ -78,6 +78,7 @@ if __name__ == "__main__":
             rmse_dataframe.iloc[i,j] = rmse
 
 
+    print('writing to ', name_template + '_dso_scale.csv')
     scale_dataframe.to_csv(name_template + '_dso_scale.csv')
     translation_dataframe.to_csv(name_template + '_dso_translation.csv')
     rotation_dataframe.to_csv(name_template + '_dso_rotation.csv')

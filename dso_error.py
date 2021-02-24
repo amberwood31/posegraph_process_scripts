@@ -19,7 +19,7 @@ python dso_error.py /media/amber/www/data/dso_supp_v2/gtFiles/sim_office_traj0.t
 """some configuration variables"""
 
 plot_aligned_arrays = False
-plot_configuration = '2d'
+plot_configuration = '3d'
 trial_method = ''
 
 
@@ -53,7 +53,9 @@ def associate_pose_graphs(pose_graph1, pose_graph2):
             
 
         for j in range(0, pose_graph1.shape[0]):
-            if (pose_graph1['timestamp'][j] - tracked_time) > 0.01:
+            if abs(pose_graph1['timestamp'][j] - tracked_time) < 0.015:
+                print('tracked_time:', tracked_time)
+                print('associated time: ', pose_graph1['timestamp'][j])
                 associated_pose_graph1['frame_id'][ground_truthID] = j
                 associated_pose_graph1.iloc[ground_truthID, 1:8] = pose_graph1.iloc[j, 1:8]
                 ground_truthID += 1
@@ -73,7 +75,7 @@ if __name__ == "__main__":
     pg1 = read_pose_graph_with_timestamp(pose_graph_1)
     pg2 = read_pose_graph_with_timestamp(pose_graph_2)
 
-    
+
     associated_pg1 = associate_pose_graphs(pg1, pg2)
     # print(associated_pg1)
     # with pd.option_context('display.precision', 15):
