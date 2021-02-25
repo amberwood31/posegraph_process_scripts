@@ -18,8 +18,8 @@ from scipy.linalg import orthogonal_procrustes
 
 """some configuration variables"""
 
-plot_aligned_arrays = False
-plot_configuration = '2d'
+plot_aligned_arrays = True
+plot_configuration = '3d'
 trial_method = ''
 
 
@@ -57,7 +57,8 @@ def associate_pose_graphs(pose_graph1, pose_graph2, timestamp_2):
 
         for j in range(0, pose_graph1.shape[0]):
             if (pose_graph1['timestamp'][j] - tracked_time) > 0.001:
-
+                print('tracked time: ', tracked_time)
+                print('gt time: ', pose_graph1['timestamp'][j])
                 associated_pose_graph1['frame_id'][ground_truthID] = image_id
                 associated_pose_graph1.iloc[ground_truthID, 1:8] = pose_graph1.iloc[j, 1:8]
                 ground_truthID += 1

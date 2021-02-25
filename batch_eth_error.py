@@ -18,7 +18,7 @@ from eth_error import associate_pose_graphs
 
 """some configuration variables"""
 results_dir = '/media/amber/www/devel/dsop_results/'
-output_folder_name_templete = 'noPlaneAssoc_nplanes1_'
+output_folder_name_templete = 'dso_'
 
 
 
