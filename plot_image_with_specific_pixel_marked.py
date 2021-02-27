@@ -15,14 +15,15 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description='PlotImage')
     parser.add_argument('-image', dest='image', help='image to plot',
                         default='image00', type=str)
-    parser.add_argument('-u', dest='u', help='image pixel to mark',
-                        default=0, type=int)
-    parser.add_argument('-v', dest='v', help='image pixel to mark',
-                        default=0, type=int)
+    # parser.add_argument('-u', dest='u', help='image pixel to mark',
+    #                     default=0, type=int)
+    # parser.add_argument('-v', dest='v', help='image pixel to mark',
+    #                     default=0, type=int)
 
-    parser.add_argument('-pixel_file', dest='pixel_file', help='file that stores pixel coordinates',
-                        default='pixel_file', type=str)
-
+    parser.add_argument('-pixel_file', dest='pixel_file', nargs='+', help='file that stores pixel coordinates', required=True)
+                     #   default='pixel_file', type=str)
+    parser.add_argument('-nonplanar_file', dest='nonplanar_file', help='pixel file of nonplanar points', 
+                        default='nonplanar_file', type=str)
     parser.add_argument('-file_type', dest='file_type', help='could be original pixel file or \
     projected', default='original', type=str)
 
@@ -35,8 +36,8 @@ if __name__ == "__main__":
 
     img = cv2.imread(options.image)
 
-    cv2.drawMarker(img, (options.u, options.v), (0, 0, 255), markerType=cv2.MARKER_STAR,
-                   markerSize=40, thickness=2, line_type=cv2.LINE_AA)
+    # cv2.drawMarker(img, (options.u, options.v), (0, 0, 255), markerType=cv2.MARKER_STAR,
+    #                markerSize=40, thickness=2, line_type=cv2.LINE_AA)
     
     if options.file_type == 'projected':         
         pixel_filepath_list = options.pixel_file.split('/')
@@ -52,30 +53,39 @@ if __name__ == "__main__":
         print('read file', pixel_file_folder+pixel_file_name[-34::])
         df = pd.read_csv(pixel_file_folder+pixel_file_name[-34::], sep=' ', header=None)
         pixels = df.to_numpy()
-    elif options.file_type == 'original':
-        df = pd.read_csv(options.pixel_file, sep=' ', header=None)
-        pixels = df.to_numpy()
 
-    print('marking '+ str(pixels.shape[0]) + ' pixels')
+        print('marking '+ str(pixels.shape[0]) + ' pixels')
 
-    for item in pixels:
-        if options.file_type == 'original':
-            cv2.drawMarker(img, (item[0], item[1]), (0, 0, 255), markerType=cv2.MARKER_STAR,
-                       markerSize=20, thickness=2, line_type=cv2.LINE_AA)
-        elif options.file_type == 'projected':
-            
+        for item in pixels:
+
             if (round(item[6]) > 640) or (round(item[7]) > 480) or item[6] < 0 or item[7] < 0:
                 continue
 
             cv2.drawMarker(img, (int(round(item[6])), int(round(item[7]))), (0, 0, 255), markerType=cv2.MARKER_STAR,
                     markerSize=20, thickness=2, line_type=cv2.LINE_AA)
 
+    elif options.file_type == 'original':
+        for single_file in options.pixel_file:
+            df = pd.read_csv(single_file, sep=' ', header=None)
 
+            pixels = df.to_numpy()
 
-    if options.file_type == 'original':
-        save_file = options.pixel_file[-28:-4]+'.png'
-    elif options.file_type == 'projected':
-        save_file = options.pixel_file[-34:-4]+'.png'
+            print('marking '+ str(pixels.shape[0]) + ' pixels')
+
+            for item in pixels:
+                cv2.drawMarker(img, (item[0], item[1]), (0, 0, 255), markerType=cv2.MARKER_DIAMOND,
+                            markerSize=20, thickness=2, line_type=cv2.LINE_AA)
+        
+        df2 = pd.read_csv(options.nonplanar_file, sep=' ', header=None)
+        nonplanar_pixels = df2.to_numpy()
+        print('marking '+ str(nonplanar_pixels.shape[0]) + ' nonplanar pixels')
+
+        for item in nonplanar_pixels:
+                cv2.drawMarker(img, (item[0], item[1]), (0, 0, 255), markerType=cv2.MARKER_CROSS,
+                            markerSize=20, thickness=2, line_type=cv2.LINE_AA)
+                
+
+    save_file = 'marked_image.png'
     print('saving to '+ save_file)
 
     cv2.imshow('marked_pixel', img)
