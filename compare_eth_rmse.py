@@ -21,9 +21,9 @@ rmse_results2 = pd.read_csv(rmse_file2, sep = ',', header = 0, index_col=0)
 # print(rmse_results.le(float(threshold)))
 # print(rmse_results.le(float(threshold)).sum().sum())
 print('mean dso rmse: ')
-print(rmse_results1.mean())
+print(rmse_results1.median())
 print('mean dsop rmse: ')
-print(rmse_results2.mean())
+print(rmse_results2.median())
 
 scale_results1 = pd.read_csv(scale_file1, sep = ',', header = 0, index_col=0)
 scale_results2 = pd.read_csv(scale_file2, sep = ',', header = 0, index_col=0)
@@ -32,9 +32,9 @@ scale_results2 = pd.read_csv(scale_file2, sep = ',', header = 0, index_col=0)
 # print(rmse_results.le(float(threshold)))
 # print(rmse_results.le(float(threshold)).sum().sum())
 print('mean dso scale: ')
-print(scale_results1.mean())
+print(scale_results1.median())
 print('mean dsop scale: ')
-print(scale_results2.mean())
+print(scale_results2.median())
 
 
 

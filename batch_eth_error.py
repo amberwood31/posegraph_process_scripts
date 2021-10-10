@@ -18,7 +18,9 @@ from eth_error import associate_pose_graphs
 
 """some configuration variables"""
 results_dir = '/media/amber/www/devel/dsop_results/'
-output_folder_name_templete = 'dso_'
+output_folder_name_templete = 'nplanes1_results_newdsop_'
+output_folder_name_templete = 'dso_results_newdsop_'
+
 
 
 
@@ -35,7 +37,7 @@ if __name__ == "__main__":
         input_template = input_filenames[i]
         column_input = input_template
 
-        path = output_folder_name_templete + 'results_newdsop_' + input_template
+        path = output_folder_name_templete + input_template
 
         if i%2 == 1:
             path = path + '_reverse'

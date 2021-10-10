@@ -12,7 +12,7 @@ from scipy.linalg import orthogonal_procrustes
 
 
 """example
- python eth_error.py /media/amber/www/data/sfm_planar_2/groundtruth.txt /media/amber/www/devel/dsop_results/trial_nplane1_dsop_sfm_planar2/result.txt /media/amber/www/data/sfm_planar_2/rgb.txt test
+ python eth_error.py /media/amber/www/data/sfm_planar_3/groundtruth.txt /media/amber/www/devel/dsop_results/trial_dso_sfm_planar3/result.txt /media/amber/www/data/sfm_planar_3/rgb.txt test
 
 """
 
@@ -57,8 +57,8 @@ def associate_pose_graphs(pose_graph1, pose_graph2, timestamp_2):
 
         for j in range(0, pose_graph1.shape[0]):
             if (pose_graph1['timestamp'][j] - tracked_time) > 0.001:
-                print('tracked time: ', tracked_time)
-                print('gt time: ', pose_graph1['timestamp'][j])
+                # print('tracked time: ', tracked_time)
+                # print('gt time: ', pose_graph1['timestamp'][j])
                 associated_pose_graph1['frame_id'][ground_truthID] = image_id
                 associated_pose_graph1.iloc[ground_truthID, 1:8] = pose_graph1.iloc[j, 1:8]
                 ground_truthID += 1

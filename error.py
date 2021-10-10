@@ -19,7 +19,7 @@ python error.py ../gt_icl_living_traj0/groundtruth.txt ../results_dsop_500_image
 """some configuration variables"""
 
 plot_aligned_arrays = False
-plot_configuration = '3d'
+plot_configuration = '2d'
 trial_method = ''
 
 

@@ -5,7 +5,7 @@ import os
 trials = 5
 output_folder_name_templete = 'dso_'
 
-input_filenames = ['eth_table_4', 'eth_table_4', 'eth_table_7', 'eth_table_7']
+input_filenames = ['sfm_planar_2', 'sfm_planar_2']#['eth_table_4', 'eth_table_4'] #, 'eth_table_7', 'eth_table_7']
 #['eth_desk_3', 'eth_large_loop_1', 'eth_plant_scene_1', 'eth_plant_scene_2', 'eth_plant_scene_3', 'eth_sofa_1', 'eth_sofa_2', 'eth_sofa_3', 'eth_sofa_4', 'eth_table_3', 'eth_table_4', 'eth_table_7']
 #['sfm_planar_2', 'sfm_planar_2', 'sfm_planar_3','sfm_planar_3']
 

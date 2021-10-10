@@ -4,7 +4,7 @@ import os
 import pandas as pd
 
 """example scripts
-python visualize_comparison_point_dth.py -results ../results_dso_500_images/ -host 0 -age 0 -color g -gt_type pov -gt_path /media/amber/www/data/ICL_living_room_traj0_frei_png/depth_pov -pcd_name dso
+python visualize_comparison_point_depth.py -results ../results_dso_500_images/ -host 0 -age 0 -color g -gt_type pov -gt_path /media/amber/www/data/ICL_living_room_traj0_frei_png/depth_pov -pcd_name dso
 
 python visualize_comparison_point_depth.py -results ../results_dso_500_images/ -host 20 -age 21 -color g -gt_type pov -gt_path /media/amber/www/data/ICL_living_room_traj0_frei_png/depth_pov -pcd_name dso
 
