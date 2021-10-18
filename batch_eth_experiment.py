@@ -3,9 +3,10 @@ import os
 
 
 trials = 5
-output_folder_name_templete = 'dso_'
+binary_path = '/root/' #'/media/amber/www/devel/'
+output_folder_name_templete = 'nplanes1_' #dso_
 
-input_filenames = ['sfm_planar_2', 'sfm_planar_2']#['eth_table_4', 'eth_table_4'] #, 'eth_table_7', 'eth_table_7']
+input_filenames = ['sfm_planar_3', 'sfm_planar_3']#['eth_table_4', 'eth_table_4'] #, 'eth_table_7', 'eth_table_7']
 #['eth_desk_3', 'eth_large_loop_1', 'eth_plant_scene_1', 'eth_plant_scene_2', 'eth_plant_scene_3', 'eth_sofa_1', 'eth_sofa_2', 'eth_sofa_3', 'eth_sofa_4', 'eth_table_3', 'eth_table_4', 'eth_table_7']
 #['sfm_planar_2', 'sfm_planar_2', 'sfm_planar_3','sfm_planar_3']
 
@@ -14,7 +15,7 @@ gt_path = ['/media/amber/www/data/' + name for name in input_filenames]
 
 if __name__ == "__main__":
 
-    os.chdir('/media/amber/www/devel/dsop_ws/devel/lib/dso_plane_ros')
+    os.chdir(binary_path + 'dsop_ws/devel/lib/dso_plane_ros')
 
 
     run_command = []
@@ -23,13 +24,13 @@ if __name__ == "__main__":
 
         input_template = input_filenames[i]
 
-        command = 'rosrun dso_plane_ros dso_plane_ros_imagefile files=/media/amber/www/data/' + input_template +'/rgb calib=/media/amber/www/data/' + input_template + '/camera.txt mode=1 plane=0 nogui=1' # nomt=1 planeActive=1 planeAssoci=0'
+        command = 'rosrun dso_plane_ros dso_plane_ros_imagefile files=/media/amber/www/data/' + input_template +'/rgb calib=/media/amber/www/data/' + input_template + '/camera.txt mode=1 plane=1 nogui=1 nomt=1 planeActive=1 planeAssoci=1'
             
         path = output_folder_name_templete + 'results_newdsop_' + input_template
 
-        # if i%2 == 1:
-        command = command + ' reverse=1'
-        path = path + '_reverse'
+        if i%2 == 1:
+            command = command + ' reverse=1'
+            path = path + '_reverse'
 
         run_command.append(command)
         output_path.append(path)
@@ -39,7 +40,7 @@ if __name__ == "__main__":
 
     for j in range(0, len(input_filenames)):
 
-        for i in range(0, 1):
+        for i in range(0, trials):
             # run experiment
             os.system(run_command[j])
 

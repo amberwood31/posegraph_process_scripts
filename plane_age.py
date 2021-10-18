@@ -30,6 +30,8 @@ def read_log_file(log_file_path):
     print(temp.loc[0])
     temp2 = pd.concat([temp, temp.groupby(level=0).agg(['mean']).stack(1)])
     print(temp2)
+    temp3 = pd.concat([temp, temp.groupby(level=0).agg(['std']).stack(1)])
+    print(temp3)
     # print(logs.loc[(logs['host_id'] == int(host_id)) & (logs['plane_id'] == int(plane_id))]['age'].max())
 
 

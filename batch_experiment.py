@@ -11,7 +11,7 @@ dso_filenames = ['sim_living_traj0', 'sim_living_traj0', 'sim_living_traj1','sim
 
 input_filenames = ['living_room_traj0', 'living_room_traj0', 'living_room_traj1', 'living_room_traj1', 'living_room_traj2', 'living_room_traj2', 'living_room_traj3', 'living_room_traj3', 'office_room_traj0', 'office_room_traj0', 'office_room_traj1','office_room_traj1', 'office_room_traj2', 'office_room_traj2', 'office_room_traj3', 'office_room_traj3']
 
-gt_path = ['gt_icl_' + name for name in input_filenames]
+gt_path = ['/media/amber/www/data/gt_icl_' + name for name in input_filenames]
 
 
 if __name__ == "__main__":

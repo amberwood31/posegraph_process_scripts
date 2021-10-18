@@ -11,6 +11,10 @@ import sys
 print(input_filenames)
 print('trials', trials)
 
+"""some configuration variables"""
+results_dir = '/media/amber/www/devel/dsop_results/log_results/'
+output_dir = '/media/amber/www/devel/dsop_results/ongoing_results/'
+output_folder_name_templete = 'nplanes10_' # use this for dso results
 
 if __name__ == "__main__":
     name_template = ''
@@ -48,11 +52,12 @@ if __name__ == "__main__":
             
             # get experimental results folder
             results_folder_name = output_path[j] + '_trial' + str(i)
-            gt_graph = '../' + gt_path[j] + '/groundtruth.txt'
-            results_graph = '../' + results_folder_name + '/result.txt'
+            gt_graph = gt_path[j] + '/groundtruth.txt'
+            results_graph = results_dir + results_folder_name + '/result.txt'
 
             try:
-                print('procesing ', results_folder_name)
+                print('procesing ', results_graph)
+                print('gt_path: ', gt_graph)
                 gt_pose = read_pose_graph(gt_graph)
                 results_pose = read_pose_graph(results_graph)
 
@@ -89,7 +94,7 @@ if __name__ == "__main__":
 
     
     print('writing to: ', name_template + '_scale.csv')
-    scale_dataframe.to_csv(name_template + '_scale.csv')
-    translation_dataframe.to_csv(name_template + '_translation.csv')
-    rotation_dataframe.to_csv(name_template + '_rotation.csv')
-    rmse_dataframe.to_csv(name_template + '_rmse.csv')
+    scale_dataframe.to_csv(output_dir + name_template + '_scale.csv')
+    translation_dataframe.to_csv(output_dir + name_template + '_translation.csv')
+    rotation_dataframe.to_csv(output_dir + name_template + '_rotation.csv')
+    rmse_dataframe.to_csv(output_dir + name_template + '_rmse.csv')

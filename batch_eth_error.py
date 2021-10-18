@@ -11,15 +11,11 @@ from batch_eth_experiment import input_filenames, trials, gt_path
 from eth_error import associate_pose_graphs
 
 
-"""example
- python eth_error.py /media/amber/www/data/sfm_planar_2/groundtruth.txt /media/amber/www/devel/dsop_results/trial_nplane1_dsop_sfm_planar2/result.txt /media/amber/www/data/sfm_planar_2/rgb.txt test
-
-"""
-
 """some configuration variables"""
-results_dir = '/media/amber/www/devel/dsop_results/'
-output_folder_name_templete = 'nplanes1_results_newdsop_'
-output_folder_name_templete = 'dso_results_newdsop_'
+results_dir = '/media/amber/www/devel/dsop_results/log_results/'
+output_dir = '/media/amber/www/devel/dsop_results/ongoing_results/'
+# output_folder_name_templete = 'nplanes1_results_newdsop_' #use this for dsop results
+output_folder_name_templete = 'noPlaneAssoc_nplanes1_results_newdsop_' # use this for dso results #noPlaneAssoc_nplanes1_results_newdsop_
 
 
 
@@ -60,9 +56,13 @@ if __name__ == "__main__":
             time_file = gt_path[j] + '/rgb.txt'
 
             try:
-                print('processing: ', results_folder_name)
+                print('processing: ', results_graph)
+                print('groundtruth file: ', gt_graph)
                 pg1 = read_pose_graph_with_timestamp(gt_graph)
+                print('groundtruth df: ' , pg1.shape)
                 pg2 = read_pose_graph(results_graph)
+                print('results df: ' , pg2.shape)
+
                 time2 = read_timestamp_id(time_file)
 
                 
@@ -107,8 +107,8 @@ if __name__ == "__main__":
                 continue
 
     print('writing to: ', name_template + '_eth_scale.csv')
-    scale_dataframe.to_csv(name_template + '_eth_scale.csv')
-    translation_dataframe.to_csv(name_template + '_eth_translation.csv')
-    rotation_dataframe.to_csv(name_template + '_eth_rotation.csv')
-    rmse_dataframe.to_csv(name_template + '_eth_rmse.csv')
+    scale_dataframe.to_csv(output_dir + name_template + '_eth_scale.csv')
+    translation_dataframe.to_csv(output_dir + name_template + '_eth_translation.csv')
+    rotation_dataframe.to_csv(output_dir + name_template + '_eth_rotation.csv')
+    rmse_dataframe.to_csv(output_dir + name_template + '_eth_rmse.csv')
     
